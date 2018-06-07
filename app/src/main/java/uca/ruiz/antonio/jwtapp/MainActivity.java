@@ -52,7 +52,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void login() {
-        Login login = new Login("user", "password");
+        /*
+         * hardcoded usuario y contraseña
+         * ROL          USUARIO         PASSWORD
+         * =======================================
+         * ADMIN        admin           admin
+         * SANITARIO    sanitario       sanitario
+         * PACIENTE     paciente        paciente
+         */
+        Login login = new Login("admin", "admin");
 
         Call<TokenResponse> call = MyApiAdapter.getApiService().login(login); //userClient.login(login);
 
