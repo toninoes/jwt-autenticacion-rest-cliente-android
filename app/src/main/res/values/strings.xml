@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">JwtApp</string>
+    <string name="title_activity_login">Entrar</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Acceder</string>
+    <string name="action_sign_in_short">Entrar</string>
+    <string name="error_invalid_email">Formato de email no válido</string>
+    <string name="error_invalid_password">Esta contraseña es demasiada corta</string>
+    <string name="error_incorrect_password">Esta contraseña es incorrecta</string>
+    <string name="error_field_required">Este campo es necesario</string>
+    <string name="entrando">Accediendo a la aplicación</string>
+    <item name="visible" type="id"/>
+    <item name="masked" type="id"/>
 </resources>

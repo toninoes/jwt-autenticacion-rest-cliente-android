@@ -1,4 +1,4 @@
-package uca.ruiz.antonio.jwtapp;
+package uca.ruiz.antonio.jwtapp.data.mapping;
 
 /**
  * Created by toni on 04/06/2018.
@@ -12,4 +12,6 @@ public class Login {
         this.username = username;
         this.password = password;
     }
+
+
 }

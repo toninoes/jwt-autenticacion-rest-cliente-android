@@ -1,4 +1,4 @@
-package uca.ruiz.antonio.jwtapp;
+package uca.ruiz.antonio.jwtapp.data.io;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
