@@ -16,8 +16,8 @@ public class Preferencias {
 
     /**
      * Devuelve un objeto SharedPreferences
-     * @param ctx
-     * @return
+     * @param ctx Contexto desde donde se llama
+     * @return SharedPreferences
      */
     public static SharedPreferences get(@NonNull Context ctx) {
         instanciar(ctx);
@@ -26,17 +26,17 @@ public class Preferencias {
 
     /**
      * Duevuelve un editor SharedPreferences
-     * @param ctx
-     * @return
+     * @param ctx Contexto desde donde se llama
+     * @return SharedPreferences.Editor
      */
     public static SharedPreferences.Editor getEditor(@NonNull Context ctx) {
         instanciar(ctx);
-        return  PREFERENCIAS.edit();
+        return PREFERENCIAS.edit();
     }
 
     /**
      * Instancia un objeto SharedPreferences
-     * @param ctx
+     * @param ctx Contexto desde donde se llama
      */
     private static void instanciar (@NonNull Context ctx) {
         if(PREFERENCIAS == null) // patrón singleton
@@ -45,8 +45,8 @@ public class Preferencias {
 
     /**
      * Para definir el fichero de preferencias igual que el nombre de la App
-     * @param ctx
-     * @return
+     * @param ctx Contexto desde donde se llama
+     * @return String
      */
     private static String definirNombre(@NonNull Context ctx) {
         return ctx.getString(R.string.app_name);
