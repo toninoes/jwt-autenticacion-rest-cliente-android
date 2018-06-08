@@ -12,6 +12,7 @@
     <string name="error_incorrect_password">Esta contraseña es incorrecta</string>
     <string name="error_field_required">Este campo es necesario</string>
     <string name="entrando">Accediendo a la aplicación</string>
+    <string name="recordar">Recordar email</string>
     <item name="visible" type="id"/>
     <item name="masked" type="id"/>
 </resources>

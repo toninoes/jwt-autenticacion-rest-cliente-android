@@ -9,6 +9,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import uca.ruiz.antonio.jwtapp.data.mapping.Login;
 import uca.ruiz.antonio.jwtapp.data.mapping.TokenResponse;
+import uca.ruiz.antonio.jwtapp.data.mapping.UserResponse;
 
 /**
  * Created by toni on 04/06/2018.
@@ -22,4 +23,7 @@ public interface MyApiService {
 
     @GET("api/cosas")
     Call<ResponseBody> getCosas(@Header("Authorization") String token);
+
+    @GET("user")
+    Call<UserResponse> getUser(@Header("Authorization") String token);
 }

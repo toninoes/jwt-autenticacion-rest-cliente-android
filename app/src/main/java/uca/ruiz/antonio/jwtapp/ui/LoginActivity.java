@@ -1,9 +1,7 @@
 package uca.ruiz.antonio.jwtapp.ui;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -14,9 +12,12 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,10 +25,11 @@ import retrofit2.Response;
 import uca.ruiz.antonio.jwtapp.R;
 import uca.ruiz.antonio.jwtapp.data.Preferencias;
 import uca.ruiz.antonio.jwtapp.data.io.MyApiAdapter;
+import uca.ruiz.antonio.jwtapp.data.mapping.Authority;
 import uca.ruiz.antonio.jwtapp.data.mapping.Login;
 import uca.ruiz.antonio.jwtapp.data.mapping.TokenResponse;
+import uca.ruiz.antonio.jwtapp.data.mapping.UserResponse;
 
-import static uca.ruiz.antonio.jwtapp.data.Preferencias.getEditor;
 
 /**
  * Created by toni on 07/06/2018.
@@ -37,9 +39,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
-    private View mLoginFormView;
+    //private View mLoginFormView;
     private ProgressDialog progressDialog;
     private static String token;
+    private CheckBox chk_recordar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,15 +67,22 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button botonLogin = (Button) findViewById(R.id.email_sign_in_button);
+        botonLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 intentoLogin();
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
+        //mLoginFormView = findViewById(R.id.login_form);
+        chk_recordar = (CheckBox) findViewById(R.id.chk_recordar);
+        Boolean recordarMail = Preferencias.get(this).getBoolean("recordar", false);
+        chk_recordar.setChecked(recordarMail);
+
+        if(recordarMail) {
+            mEmailView.setText(Preferencias.get(this).getString("email", "email"));
+        }
     }
 
 
@@ -146,6 +157,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
                 if(response.isSuccessful()) {
                     token = "Bearer " + response.body().getToken();
+                    definirPreferencias(token);
+                    obtenerUsuario(token);
                     irMain(token);
                 } else {
                     progressDialog.cancel();
@@ -162,10 +175,53 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void irMain(String token) {
-        Preferencias.getEditor(this).putString("token", token).commit();
-
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    private void definirPreferencias(String token) {
+        Preferencias.getEditor(this).putString("token", token).commit();
+        Preferencias.getEditor(this).putString("email", mEmailView.getText().toString()).commit();
+        Preferencias.getEditor(this).putBoolean("recordar", chk_recordar.isChecked()).commit();
+    }
+
+    private void obtenerUsuario(String token) {
+        Call<UserResponse> call = MyApiAdapter.getApiService().getUser(token);
+        call.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if(response.isSuccessful()) {
+                    UserResponse user = response.body();
+                    definirUsuario(user);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Token incorrecto !", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "error :(", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void definirUsuario(UserResponse user) {
+
+        Preferencias.getEditor(this).putString("nombre", user.getFirstname()).commit();
+        Preferencias.getEditor(this).putString("apellidos", user.getLastname()).commit();
+        Preferencias.getEditor(this).putBoolean("activo", user.getEnabled()).commit();
+
+        // Reiniciamos los roles a falso todos
+        Preferencias.getEditor(this).putBoolean("ROLE_ADMIN", false).commit();
+        Preferencias.getEditor(this).putBoolean("ROLE_SANITARIO", false).commit();
+        Preferencias.getEditor(this).putBoolean("ROLE_PACIENTE", false).commit();
+
+        // establecemos los roles que nos llega del servidor
+        for(Authority rol: user.getAuthorities()) {
+            Preferencias.getEditor(this).putBoolean(rol.getAuthority(), true).commit();
+        }
+
     }
 
 }
