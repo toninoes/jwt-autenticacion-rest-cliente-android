@@ -5,19 +5,15 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,6 +25,7 @@ import uca.ruiz.antonio.jwtapp.data.mapping.Authority;
 import uca.ruiz.antonio.jwtapp.data.mapping.Login;
 import uca.ruiz.antonio.jwtapp.data.mapping.TokenResponse;
 import uca.ruiz.antonio.jwtapp.data.mapping.UserResponse;
+import uca.ruiz.antonio.jwtapp.util.Validacion;
 
 
 /**
@@ -37,9 +34,8 @@ import uca.ruiz.antonio.jwtapp.data.mapping.UserResponse;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    //private View mLoginFormView;
+    private EditText et_email;
+    private EditText et_password;
     private ProgressDialog progressDialog;
     private static String token;
     private CheckBox chk_recordar;
@@ -50,13 +46,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        mPasswordView = (EditText) findViewById(R.id.password);
+        et_email = (EditText) findViewById(R.id.et_email);
+        et_password = (EditText) findViewById(R.id.et_password);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getString(R.string.entrando));
 
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        et_password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
@@ -67,21 +63,20 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button botonLogin = (Button) findViewById(R.id.email_sign_in_button);
-        botonLogin.setOnClickListener(new OnClickListener() {
+        Button btn_entrar = (Button) findViewById(R.id.btn_entrar);
+        btn_entrar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 intentoLogin();
             }
         });
 
-        //mLoginFormView = findViewById(R.id.login_form);
         chk_recordar = (CheckBox) findViewById(R.id.chk_recordar);
         Boolean recordarMail = Preferencias.get(this).getBoolean("recordar", false);
         chk_recordar.setChecked(recordarMail);
 
         if(recordarMail) {
-            mEmailView.setText(Preferencias.get(this).getString("email", "email"));
+            et_email.setText(Preferencias.get(this).getString("email", "email"));
         }
     }
 
@@ -93,34 +88,30 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void intentoLogin() {
         // Resetear errores
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+        et_email.setError(null);
+        et_password.setError(null);
 
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String email = et_email.getText().toString();
+        String password = et_password.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
-        // Valida campo password
-        if (TextUtils.isEmpty(password)) {
-            mPasswordView.setError(getString(R.string.error_field_required));
-            focusView = mPasswordView;
-            cancel = true;
-        } else if (!esPasswordValida(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+        // Valida campo Password
+        if (!Validacion.tamPassword(password)) {
+            et_password.setError(getString(R.string.error_tam_password_invalida));
+            focusView = et_password;
             cancel = true;
         }
 
-        // Valida campo email.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+        // Valida campo Email.
+        if (!Validacion.tamEmail(email)) {
+            et_email.setError(getString(R.string.error_tam_email_invalido));
+            focusView = et_email;
             cancel = true;
-        } else if (!esEmailValido(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+        } else if (!Validacion.formatoEmail(email)) {
+            et_email.setError(getString(R.string.error_formato_email_invalido));
+            focusView = et_email;
             cancel = true;
         }
 
@@ -131,10 +122,6 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             login(email, password);
         }
-    }
-
-    private boolean esEmailValido(String email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private boolean esPasswordValida(String password) {
@@ -175,13 +162,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void irMain(String token) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, RegistroActivity.class);
         startActivity(intent);
     }
 
     private void definirPreferencias(String token) {
         Preferencias.getEditor(this).putString("token", token).commit();
-        Preferencias.getEditor(this).putString("email", mEmailView.getText().toString()).commit();
+        Preferencias.getEditor(this).putString("email", et_email.getText().toString()).commit();
         Preferencias.getEditor(this).putBoolean("recordar", chk_recordar.isChecked()).commit();
     }
 
@@ -219,7 +206,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // establecemos los roles que nos llega del servidor
         for(Authority rol: user.getAuthorities()) {
-            Preferencias.getEditor(this).putBoolean(rol.getAuthority(), true).commit();
+            Preferencias.getEditor(this).putBoolean(rol.getName().toString(), true).commit();
         }
 
     }

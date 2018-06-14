@@ -13,15 +13,22 @@ public class Authority implements Serializable
 
     @SerializedName("authority")
     @Expose
-    private String authority;
+    private AuthorityName name;
     private final static long serialVersionUID = -7287981482110975325L;
 
-    public String getAuthority() {
-        return authority;
+    public Authority() {
     }
 
-    public void setAuthority(String authority) {
-        this.authority = authority;
+    public Authority(AuthorityName name) {
+        this.name = name;
+    }
+
+    public AuthorityName getName() {
+        return name;
+    }
+
+    public void setName(AuthorityName name) {
+        this.name = name;
     }
 
 }

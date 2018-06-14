@@ -9,6 +9,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import uca.ruiz.antonio.jwtapp.data.mapping.Login;
 import uca.ruiz.antonio.jwtapp.data.mapping.TokenResponse;
+import uca.ruiz.antonio.jwtapp.data.mapping.User;
 import uca.ruiz.antonio.jwtapp.data.mapping.UserResponse;
 
 /**
@@ -26,4 +27,8 @@ public interface MyApiService {
 
     @GET("user")
     Call<UserResponse> getUser(@Header("Authorization") String token);
+
+    @Headers("Content-Type: application/json")
+    @POST("admin/registroAdmin")
+    Call<UserResponse> registrarAdmin(@Body User user, @Header("Authorization") String token);
 }

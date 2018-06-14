@@ -2,17 +2,22 @@
     <string name="app_name">JwtApp</string>
     <string name="title_activity_login">Entrar</string>
 
-    <!-- Strings related to login -->
+    <!-- Cadenas de LoginActivity -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Contraseña</string>
     <string name="action_sign_in">Acceder</string>
     <string name="action_sign_in_short">Entrar</string>
-    <string name="error_invalid_email">Formato de email no válido</string>
-    <string name="error_invalid_password">Esta contraseña es demasiada corta</string>
-    <string name="error_incorrect_password">Esta contraseña es incorrecta</string>
-    <string name="error_field_required">Este campo es necesario</string>
+    <string name="error_formato_email_invalido">Formato de email no válido</string>
+    <string name="error_tam_email_invalido">El email debe contener entre 4 y 100 caracteres</string>
+    <string name="error_tam_password_invalida">La contraseña debe contener entre 4 y 100 caracteres</string>
     <string name="entrando">Accediendo a la aplicación</string>
     <string name="recordar">Recordar email</string>
-    <item name="visible" type="id"/>
-    <item name="masked" type="id"/>
+    <item name="visible" type="id" />
+    <item name="masked" type="id" />
+
+    <!-- Cadenas de RegistroActivity -->
+    <string name="error_tam_nombre_invalido">El nombre debe contener entre 4 y 50 caracteres</string>
+    <string name="error_tam_apellidos_invalido">Los apellidos deben contener entre 4 y 100 caracteres</string>
+
+    <string name="errores">ERRORES</string>
 </resources>

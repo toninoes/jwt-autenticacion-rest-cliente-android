@@ -4,17 +4,23 @@ package uca.ruiz.antonio.jwtapp.data.mapping;
  * Created by toni on 08/06/2018.
  */
 
-import java.io.Serializable;
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UserResponse implements Serializable
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Date;
+
+public class User implements Serializable
 {
 
     @SerializedName("username")
     @Expose
     private String username;
+    @SerializedName("password")
+    @Expose
+    private String password;
     @SerializedName("firstname")
     @Expose
     private String firstname;
@@ -30,14 +36,39 @@ public class UserResponse implements Serializable
     @SerializedName("enabled")
     @Expose
     private Boolean enabled;
+    @SerializedName("lastPasswordResetDate")
+    @Expose
+    private Date lastPasswordResetDate;
     private final static long serialVersionUID = -7074548215409497555L;
+    @SerializedName("permisos")
+    @Expose
+    private ArrayList<Boolean> permisos = new ArrayList <>(3);
 
-    public UserResponse(String username, String firstname, String lastname, String email, List<Authority> authorities) {
+    public User() {
+    }
+
+    public User(String username, String firstname, String lastname, String email, List<Authority> authorities) {
         this.username = username;
+        this.password = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.authorities = authorities;
+        this.enabled = false;
+        this.lastPasswordResetDate = new Date();
+    }
+
+    public User(String username, String firstname, String lastname, String email, List<Authority> authorities,
+                ArrayList<Boolean> permisos) {
+        this.username = username;
+        this.password = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.authorities = authorities;
+        this.enabled = false;
+        this.lastPasswordResetDate = new Date();
+        this.permisos = permisos;
     }
 
     public String getUsername() {
@@ -88,4 +119,15 @@ public class UserResponse implements Serializable
         this.enabled = enabled;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public ArrayList<Boolean> getPermisos() {
+        return permisos;
+    }
+
+    public void setPermisos(ArrayList<Boolean> permisos) {
+        this.permisos = permisos;
+    }
 }

@@ -35,7 +35,7 @@
         android:layout_marginLeft="49dp" />
 
     <TextView
-        android:id="@+id/tv_fn"
+        android:id="@+id/et_nombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="nombre"
@@ -59,15 +59,15 @@
         app:layout_constraintLeft_toLeftOf="@+id/tv1" />
 
     <TextView
-        android:id="@+id/tv_ln"
+        android:id="@+id/et_apellidos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="apellidos"
         tools:layout_constraintTop_creator="1"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/tv_fn"
+        app:layout_constraintTop_toBottomOf="@+id/et_nombre"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/tv_fn" />
+        app:layout_constraintLeft_toLeftOf="@+id/et_nombre" />
 
     <TextView
         android:id="@+id/tv3"
@@ -81,15 +81,15 @@
         app:layout_constraintLeft_toLeftOf="@+id/tv2" />
 
     <TextView
-        android:id="@+id/tv_em"
+        android:id="@+id/et_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="email"
         tools:layout_constraintTop_creator="1"
         android:layout_marginTop="18dp"
-        app:layout_constraintTop_toBottomOf="@+id/tv_ln"
+        app:layout_constraintTop_toBottomOf="@+id/et_apellidos"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/tv_ln" />
+        app:layout_constraintLeft_toLeftOf="@+id/et_apellidos" />
 
     <CheckBox
         android:id="@+id/chk_act"
