@@ -12,10 +12,10 @@ public class Validacion {
     private static final int minEmail = 4;
     private static final int maxEmail = 100;
 
-    private static final int minNombre = 4;
+    private static final int minNombre = 3;
     private static final int maxNombre = 50;
 
-    private static final int minApellidos = 4;
+    private static final int minApellidos = 3;
     private static final int maxApellidos = 100;
 
     public static boolean formatoEmail(String email) {

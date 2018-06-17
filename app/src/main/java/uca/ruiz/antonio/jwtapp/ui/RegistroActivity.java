@@ -2,12 +2,14 @@ package uca.ruiz.antonio.jwtapp.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,13 +20,11 @@ import retrofit2.Response;
 import uca.ruiz.antonio.jwtapp.R;
 import uca.ruiz.antonio.jwtapp.data.Preferencias;
 import uca.ruiz.antonio.jwtapp.data.io.MyApiAdapter;
+import uca.ruiz.antonio.jwtapp.data.mapping.ApiError;
 import uca.ruiz.antonio.jwtapp.data.mapping.Authority;
 import uca.ruiz.antonio.jwtapp.data.mapping.User;
 import uca.ruiz.antonio.jwtapp.data.mapping.UserResponse;
 import uca.ruiz.antonio.jwtapp.util.Validacion;
-
-import static android.R.attr.password;
-import static uca.ruiz.antonio.jwtapp.R.id.et_password;
 
 public class RegistroActivity extends AppCompatActivity {
 
@@ -126,16 +126,26 @@ public class RegistroActivity extends AppCompatActivity {
     }
 
     private void registrar(User user) {
-        Call<UserResponse> call = MyApiAdapter.getApiService().registrarAdmin(user, token);
+        Call<UserResponse> call = MyApiAdapter.getApiService().registro(user, token);
 
         call.enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if(response.isSuccessful()) {
                     Toast.makeText(RegistroActivity.this, "Creado usuario " + response.body().getEmail(),
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(RegistroActivity.this, "Error al crear usuario :(", Toast.LENGTH_SHORT).show();
+                    if (response.errorBody().contentType().subtype().equals("json")) {
+                        ApiError apiError = ApiError.fromResponseBody(response.errorBody());
+                        Toast.makeText(RegistroActivity.this, apiError.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d(TAG, apiError.getPath() + " " + apiError.getMessage());
+                    } else {
+                        try {
+                            Log.d(TAG, response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
 

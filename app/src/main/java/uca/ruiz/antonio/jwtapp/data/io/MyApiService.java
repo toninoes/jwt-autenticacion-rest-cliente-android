@@ -22,13 +22,15 @@ public interface MyApiService {
     @POST("auth")
     Call<TokenResponse> login(@Body Login login);
 
-    @GET("api/cosas")
-    Call<ResponseBody> getCosas(@Header("Authorization") String token);
+    @Headers("Content-Type: application/json")
+    @POST("registro")
+    Call<UserResponse> registro(@Body User user, @Header("Authorization") String token);
 
     @GET("user")
     Call<UserResponse> getUser(@Header("Authorization") String token);
 
-    @Headers("Content-Type: application/json")
-    @POST("admin/registroAdmin")
-    Call<UserResponse> registrarAdmin(@Body User user, @Header("Authorization") String token);
+    @GET("api/cosas")
+    Call<ResponseBody> getCosas(@Header("Authorization") String token);
+
+
 }

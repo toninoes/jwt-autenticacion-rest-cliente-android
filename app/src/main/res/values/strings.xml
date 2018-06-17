@@ -16,8 +16,8 @@
     <item name="masked" type="id" />
 
     <!-- Cadenas de RegistroActivity -->
-    <string name="error_tam_nombre_invalido">El nombre debe contener entre 4 y 50 caracteres</string>
-    <string name="error_tam_apellidos_invalido">Los apellidos deben contener entre 4 y 100 caracteres</string>
+    <string name="error_tam_nombre_invalido">El nombre debe contener entre 3 y 50 caracteres</string>
+    <string name="error_tam_apellidos_invalido">Los apellidos deben contener entre 3 y 100 caracteres</string>
 
     <string name="errores">ERRORES</string>
 </resources>
