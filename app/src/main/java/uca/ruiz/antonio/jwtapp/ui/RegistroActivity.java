@@ -1,5 +1,6 @@
 package uca.ruiz.antonio.jwtapp.ui;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,7 @@ public class RegistroActivity extends AppCompatActivity {
     private static String token;
     private EditText et_nombre, et_apellidos, et_email;
     private CheckBox chk_adm, chk_san, chk_pac;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,9 @@ public class RegistroActivity extends AppCompatActivity {
         chk_adm = (CheckBox) findViewById(R.id.chk_adm);
         chk_san = (CheckBox) findViewById(R.id.chk_san);
         chk_pac = (CheckBox) findViewById(R.id.chk_pac);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getString(R.string.registrando));
 
         btn_registrar = (Button) findViewById(R.id.btn_registrar);
         btn_registrar.setOnClickListener(new View.OnClickListener() {
@@ -126,15 +131,18 @@ public class RegistroActivity extends AppCompatActivity {
     }
 
     private void registrar(User user) {
+        progressDialog.show();
         Call<UserResponse> call = MyApiAdapter.getApiService().registro(user, token);
 
         call.enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if(response.isSuccessful()) {
+                    progressDialog.cancel();
                     Toast.makeText(RegistroActivity.this, "Creado usuario " + response.body().getEmail(),
                             Toast.LENGTH_LONG).show();
                 } else {
+                    progressDialog.cancel();
                     if (response.errorBody().contentType().subtype().equals("json")) {
                         ApiError apiError = ApiError.fromResponseBody(response.errorBody());
                         Toast.makeText(RegistroActivity.this, apiError.getMessage(), Toast.LENGTH_LONG).show();
@@ -151,6 +159,7 @@ public class RegistroActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
+                progressDialog.cancel();
                 Toast.makeText(RegistroActivity.this, "error :(", Toast.LENGTH_SHORT).show();
             }
         });

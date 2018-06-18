@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,12 +16,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import uca.ruiz.antonio.jwtapp.R;
 import uca.ruiz.antonio.jwtapp.data.Preferencias;
 import uca.ruiz.antonio.jwtapp.data.io.MyApiAdapter;
+import uca.ruiz.antonio.jwtapp.data.mapping.ApiError;
 import uca.ruiz.antonio.jwtapp.data.mapping.Authority;
 import uca.ruiz.antonio.jwtapp.data.mapping.Login;
 import uca.ruiz.antonio.jwtapp.data.mapping.TokenResponse;
@@ -34,6 +38,7 @@ import uca.ruiz.antonio.jwtapp.util.Validacion;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String TAG = LoginActivity.class.getSimpleName();
     private EditText et_email;
     private EditText et_password;
     private ProgressDialog progressDialog;
@@ -143,6 +148,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
                 if(response.isSuccessful()) {
+                    progressDialog.cancel();
                     token = "Bearer " + response.body().getToken();
                     definirPreferencias(token);
                     obtenerUsuario(token);
